@@ -53,7 +53,7 @@ defmodule Shopifex.MixProject do
       {:phoenix, "~> 1.7.11"},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_view, "~> 2.0"},
-      {:phoenix_html_helpers, "~> 1.0"},
+      {:phoenix_html_helpers, "~> 1.0", optional: true},
       {:ecto_sql, "~> 3.7"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, ">= 2.11.0"},
