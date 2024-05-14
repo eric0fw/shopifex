@@ -43,34 +43,49 @@ defmodule ShopifexWeb do
     end
   end
 
+  def view_legacy() do
+    quote do
+      use Phoenix.View,
+        root: "lib/shopifex_web/templates",
+        namespace: ShopifexWeb
+
+      # Import convenience functions from controllers
+      import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]
+
+      # Include shared imports and aliases for views
+      unquote(view_helpers_legacy())
+    end
+  end
+
+  defp view_helpers_legacy() do
+    web_module = Application.get_env(:shopifex, :web_module)
+
+    quote do
+      # Use all HTML functionality (forms, tags, etc)
+      use Phoenix.HTML
+      # Import basic rendering functionality (render, render_layout, etc)
+      import Phoenix.View
+
+      import ShopifexWeb.ErrorHelpers
+      import ShopifexWeb.Gettext
+      alias unquote(web_module).Router.Helpers, as: Routes
+    end
+  end
+
   defp view_helpers do
     web_module = Application.get_env(:shopifex, :web_module)
 
-    if Version.compare(Application.spec(:phoenix_html, :vsn) |> to_string(), "4.0.0") == :lt do
-      quote do
-        # Use all HTML functionality (forms, tags, etc)
-        use Phoenix.HTML
+    quote do
+      # Use all HTML functionality (forms, tags, etc)
+      import Phoenix.HTML
+      import Phoenix.HTML.Form
+      use PhoenixHTMLHelpers
+      # Import basic rendering functionality (render, render_layout, etc)
+      import Phoenix.View
 
-        # Import basic rendering functionality (render, render_layout, etc)
-        import Phoenix.View
-
-        import ShopifexWeb.ErrorHelpers
-        import ShopifexWeb.Gettext
-        alias unquote(web_module).Router.Helpers, as: Routes
-      end
-    else
-      quote do
-        # Use all HTML functionality (forms, tags, etc)
-        import Phoenix.HTML
-        import Phoenix.HTML.Form
-        use PhoenixHTMLHelpers
-        # Import basic rendering functionality (render, render_layout, etc)
-        import Phoenix.View
-
-        import ShopifexWeb.ErrorHelpers
-        import ShopifexWeb.Gettext
-        alias unquote(web_module).Router.Helpers, as: Routes
-      end
+      import ShopifexWeb.ErrorHelpers
+      import ShopifexWeb.Gettext
+      alias unquote(web_module).Router.Helpers, as: Routes
     end
   end
 
