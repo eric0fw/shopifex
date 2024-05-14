@@ -46,18 +46,31 @@ defmodule ShopifexWeb do
   defp view_helpers do
     web_module = Application.get_env(:shopifex, :web_module)
 
-    quote do
-      # Use all HTML functionality (forms, tags, etc)
-      import Phoenix.HTML
-      import Phoenix.HTML.Form
-      use PhoenixHTMLHelpers
+    if Version.compare(Application.spec(:phoenix_html, :vsn) |> to_string(), "4.0.0") == :lt do
+      quote do
+        # Use all HTML functionality (forms, tags, etc)
+        use Phoenix.HTML
 
-      # Import basic rendering functionality (render, render_layout, etc)
-      import Phoenix.View
+        # Import basic rendering functionality (render, render_layout, etc)
+        import Phoenix.View
 
-      import ShopifexWeb.ErrorHelpers
-      import ShopifexWeb.Gettext
-      alias unquote(web_module).Router.Helpers, as: Routes
+        import ShopifexWeb.ErrorHelpers
+        import ShopifexWeb.Gettext
+        alias unquote(web_module).Router.Helpers, as: Routes
+      end
+    else
+      quote do
+        # Use all HTML functionality (forms, tags, etc)
+        import Phoenix.HTML
+        import Phoenix.HTML.Form
+        use PhoenixHTMLHelpers
+        # Import basic rendering functionality (render, render_layout, etc)
+        import Phoenix.View
+
+        import ShopifexWeb.ErrorHelpers
+        import ShopifexWeb.Gettext
+        alias unquote(web_module).Router.Helpers, as: Routes
+      end
     end
   end
 
